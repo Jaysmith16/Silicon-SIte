@@ -1,0 +1,45 @@
+.list-group{
+    margin-bottom: 0;
+}
+.list-group-item{
+    
+    background-color: #fff;
+    color: #034694;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px 15px;
+    cursor: pointer;
+    border: 1px solid #034694;
+}
+.list-group-item:hover{
+    background-color: #034694;
+    color: #fff;
+}
+.list-group-item.active{
+    background-color: #034694;
+    color: #fff;
+}
+.heading{
+    font-size: 20px;
+    font-weight: 600;
+    color: #034694;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+.details{
+    font-size: 14px;
+    font-weight: 400;
+    color: #034694;
+    margin-bottom: 20px;
+    
+
+}
+.social-media-section{
+    margin-bottom: 20px;
+
+}
+.social-media-section a i{
+    font-size: 20px;
+    color: #034694;
+    margin-right: 10px;
+}

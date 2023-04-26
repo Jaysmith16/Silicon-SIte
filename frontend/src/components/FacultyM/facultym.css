@@ -1,0 +1,153 @@
+.list-group{
+    margin-bottom: 0;
+}
+.list-group-item{
+   border: 1px solid #034694;
+    background-color: #fff;
+    color: #034694;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+.list-group-item:hover{
+    background-color: #034694;
+    color: #fff;
+}
+.list-group-item.active{
+    background-color: #034694;
+    color: #fff;
+}
+.heading{
+    font-size: 20px;
+    font-weight: 600;
+    color: #034694;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+.details{
+    font-size: 14px;
+    font-weight: 400;
+    color: #034694;
+    margin-bottom: 20px;
+    
+
+}
+.social-media-section{
+    margin-bottom: 20px;
+
+}
+.social-media-section a i{
+    font-size: 20px;
+    color: #034694;
+    margin-right: 10px;
+}
+.sub-body{
+    font-size: 14px;
+    font-weight: 400;
+    color: #034694;
+    margin-bottom: 20px;
+}
+.card-titile-forsub{
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+.card-text-sub{
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    margin-bottom: 20px;
+}
+.sub-body-addmore{
+    height: 90%;
+}
+.btn-primary-addmore{
+    width: 30%;
+    height: 40px;
+    border: 1px solid #034694;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    background-color: #034694;
+    cursor: pointer;
+    margin-top: 35%;
+}
+.btn-primary-addmore:hover{
+    background-color: #fff;
+    color: #034694;
+    border: 1px solid #034694;
+}
+.buttn{
+    width: 30%;
+    height: 40px;
+    border: 1px solid #034694;
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    background-color: #034694;
+    cursor: pointer;
+
+}
+.buttn-trash{
+    /* red */
+    background-color: #4d2929;
+    border: 1px solid #341515;
+}
+.buttn-edit{
+    /* yellow */
+    background-color: #948803;
+    border: 1px solid #034694;
+}
+.buttn-check{
+    /* green */
+    background-color: #089403;
+    border: 1px solid #034694;
+}
+.form-selct-sub{
+    width: 100%;
+    height: 40px;
+    border: 1px solid #034694;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    background-color: #fff;
+    cursor: pointer;
+}
+.option-sub{
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    background-color: #fff;
+    cursor: pointer;
+}
+.btn-primary-modal{
+    width: 100%;
+    height: 40px;
+    border: 1px solid #034694;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    background-color: #034694;
+    cursor: pointer;
+}
+.lable-modal{
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    margin-bottom: 20px;
+}

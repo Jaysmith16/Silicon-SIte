@@ -1,0 +1,57 @@
+
+.login-card{
+    background-color: #fff;
+    max-width: 300px;
+    margin: auto;
+    font-family: arial;
+    padding: 20px;
+    margin-top: 50px;
+}
+.App{
+    background-color: #034694;
+    height: 700px;
+}
+.card-title{
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+    color: #034694;
+    margin-bottom: 20px;
+}
+.label{
+    font-size: 14px;
+    font-weight: 400;
+    color: #034694;
+    margin-bottom: 10px;
+}
+
+.input{
+    width: 100%;
+    height: 40px;
+    border: 1px solid #034694;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #034694;
+}
+.btn-primary-submit{
+    width: 100%;
+    height: 40px;
+    border: 1px solid #034694;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    background-color: #034694;
+    cursor: pointer;
+}
+.card-footer-sec{
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #034694;
+}
