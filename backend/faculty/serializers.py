@@ -4,7 +4,6 @@ from faculty.models import *
 
 
 class FacultySerializers(serializers.ModelSerializer):
-    subject_assigned = serializers.CharField(source='subject_assigned.name')
     class Meta:
         model = Faculty
         fields = '__all__'

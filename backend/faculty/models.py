@@ -14,7 +14,7 @@ class Semester(models.Model):
 class Subject(AbstractBaseModel):
     semester = models.ForeignKey(Semester, related_name='semester', on_delete=models.CASCADE, null=True, blank=True)
     added_by = models.ForeignKey(User, related_name='subject_adding_user', on_delete=models.CASCADE, null=True, blank=True )
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=255)
     description = models.TextField( blank=True, null=True)
     
     class Meta:
@@ -26,8 +26,8 @@ class Subject(AbstractBaseModel):
 
 class Faculty(AbstractBaseModel):
     semester = models.ForeignKey(Semester, related_name='semester_teaching', on_delete=models.CASCADE, null=True, blank=True)
-    subject_assigned = models.ForeignKey(Subject, related_name='subject_assigned', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    subject_assigned = models.CharField(max_length=255, null=True, blank=True)
     department = models.CharField(max_length=50, choices=FACULTY_DEPARTMENT_CHOICES, default= "CSE") 
 
     def __str__(self) -> str:
