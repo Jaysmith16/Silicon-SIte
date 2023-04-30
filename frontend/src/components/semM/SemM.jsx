@@ -9,6 +9,7 @@ import {
   useUpdateSubjectDataMutation,
 } from "../../services/subjectfacultyapi";
 import { getToken } from "../../services/LocalStorage";
+import { useNavigate } from "react-router-dom";
 function SemM() {
   const [sem, setSem] = useState(1);
   const [showmodal, setShowModal] = useState(false);
@@ -108,6 +109,7 @@ function SemM() {
       setShowModal(false);
     }
   };
+  const navigate = useNavigate();
   return (
     <>
       <div className="container">
@@ -201,7 +203,19 @@ function SemM() {
               </div>
             </div>
           ) : (
-            "No Data"
+            <div className="col-md-9">
+              <div className="container">
+                Please Login or Register to access data
+                <br />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </button>
+              </div>
+            </div>
           )}
         </div>
         <div

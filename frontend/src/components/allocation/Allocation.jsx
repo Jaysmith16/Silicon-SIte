@@ -9,6 +9,7 @@ import {
   useUpdateFacultyDataMutation,
 } from "../../services/subjectfacultyapi";
 import { getToken } from "../../services/LocalStorage";
+import { useNavigate } from "react-router-dom";
 function Allocation() {
   const [sem, setSem] = useState(1);
   const token = getToken();
@@ -113,6 +114,7 @@ function Allocation() {
       setShowModal(false);
     }
   };
+  const navigate = useNavigate();
 
   return (
     <>
@@ -313,7 +315,19 @@ function Allocation() {
               </div>
             </div>
           ) : (
-            "No Data"
+            <div className="col-md-9">
+              <div className="container">
+                Please Login or Register to access data
+                <br />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </button>
+              </div>
+            </div>
           )}
         </div>
         <div
