@@ -20,6 +20,8 @@ class FacultyView(APIView):
     def get_by_sem(self, sem):
         faculties = Faculty.objects.filter(semester__number = sem)
         faculty_data = FacultySerializers(faculties, many=True).data
+        for data in faculty_data:
+            data["department"] = FACULTY_DEPARTMENT_FULL_NAME[data["department"]]
         return {"error":False, "msg":"Faculty data", "data":faculty_data}
         
         
@@ -43,7 +45,7 @@ class FacultyView(APIView):
                         
                         
     def add_new_faculty(self, faculty_data):
-        for field in ["semester","name","department","subject_assigned"]:
+        for field in ["semester","name","department", "subject_1","subject_2","subject_3"]:
             if field not in faculty_data:
                 return {"error":True, "msg":f"{field} not present in request data","data":None}
         sem = get_object_or_404(Semester, number = faculty_data["semester"])

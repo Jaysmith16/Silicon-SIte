@@ -1,1631 +1,499 @@
-import React, { useState } from 'react'
-import './allocation.css'
+import React, { useEffect, useState } from "react";
+import "./allocation.css";
+import { sidebardata } from "../../pages/utils";
+import {
+  useAddFacultyDataMutation,
+  useDeleteFacultyDataMutation,
+  useGetFacultyBySemQuery,
+  useGetSubjectBySemQuery,
+  useUpdateFacultyDataMutation,
+} from "../../services/subjectfacultyapi";
+import { getToken } from "../../services/LocalStorage";
 function Allocation() {
-    const [data, setData] = useState(
+  const [sem, setSem] = useState(1);
+  const token = getToken();
+  const [ids, setids] = useState();
+  const [showmodal, setShowModal] = useState(false);
+  const {
+    data = [],
+    error,
+    isSuccess,
+    isLoading,
+    refetch,
+  } = useGetFacultyBySemQuery(
+    {
+      access_token: token.access_token,
+      sem: sem,
+    },
+    { refetchOnMountOrArgChange: true }
+  );
+  const [faculty_data, setFacultyData] = useState({
+    semester: sem,
+    name: "",
+    department: "CSE",
+    subject_1: "",
+    subject_2: "",
+    subject_3: "",
+  });
+  useEffect(() => {
+    if (showmodal === false) refetch();
+  }, [showmodal]);
+  const [disabled, setDisabled] = useState({});
+  const {
+    data: subjectdata,
+    error: subjecterror,
+    isSuccess: isSucessSubject,
+    isLoading: issubjectloading,
+    refetch: subjectrefetch,
+  } = useGetSubjectBySemQuery(
+    {
+      access_token: token.access_token,
+      sem: sem,
+    },
+    { refetchOnMountOrArgChange: true }
+  );
+  const [servermsg, setServermsg] = useState();
 
-        [
-            {
-                id: 1,
-                heading: 'Sagarika Swain',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
+  const [addfaculty] = useAddFacultyDataMutation();
+  const [editfaculty] = useUpdateFacultyDataMutation();
+  const [deletefaculty] = useDeleteFacultyDataMutation();
+  const handleDeleteFaculty = async (id) => {
+    const { data, error, isLoading, isSuccess } = await deletefaculty({
+      access_token: token.access_token,
+      id: id,
+    });
+    if (error) {
+      console.log(error);
+      setServermsg(error.msg);
+    }
 
-            },
-            {
-                id: 2,
-                heading: 'Siba Prasada Tripathy',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            },
-            {
-                id: 3,
-                heading: 'TARINI CHARANA MISHRA',
+    if (data) {
+      console.log(data);
+      setServermsg(data.msg);
+      setShowModal(false);
+    }
+  };
+  const handleAddSubmit = async () => {
+    const { data, error, isLoading, isSuccess } = await addfaculty({
+      access_token: token.access_token,
+      faculty_data,
+    });
+    if (error) {
+      console.log(error);
+      setServermsg(error.data.msg);
+    }
 
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            },
-            {
-                id: 4,
-                heading: 'Surajit Das',
+    if (data) {
+      console.log(data);
+      setServermsg(data.msg);
+      setShowModal(false);
+    }
+  };
+  const [editdata, setEditData] = useState({
+    subject_1: "",
+    subject_2: "",
+    subject_3: "",
+  });
+  const handleEditFaculty = async (id) => {
+    const { data, error, isLoading, isSuccess } = await editfaculty({
+      access_token: token.access_token,
+      faculty_data: editdata,
+      id: id,
+    });
+    if (error) {
+      console.log(error);
+      setServermsg(error.msg);
+    }
 
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            }, {
-                id: 5,
-                heading: 'SUBASH CHANDRA TRIPATHY',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            }, {
-                id: 6,
-                heading: 'Ranjit Kumar Behera',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            }, {
-                id: 7,
-                heading: 'Rabinarayan Mohanty',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            },
-            {
-                id: 8,
-                heading: 'PRADIPTA KUMAR PATTANAYAK',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            }, {
-                id: 9,
-                heading: 'Paramita Aryadhara Panda',
-                preference: [
-                    {
-                        id: 1,
-                        name: 'Mathematics-1',
-                    },
-                    {
-                        id: 2,
-                        name: 'Physics-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'Chemistry-1',
-                    }
-                ]
-            }
-        ])
+    if (data) {
+      console.log(data);
+      disabled[id] = !disabled[id];
+      setDisabled({ ...disabled });
+      setServermsg(data.msg);
+      setShowModal(false);
+    }
+  };
 
-
-    const sidebarData = [
-        {
-            id: 1,
-            name: '1st Semeseter',
-            branchData:
-                [
-                    {
-                        id: 1,
-                        heading: 'Sagarika Swain',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-
-                    },
-                    {
-                        id: 2,
-                        heading: 'Siba Prasada Tripathy',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        heading: 'TARINI CHARANA MISHRA',
-
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    },
-                    {
-                        id: 4,
-                        heading: 'Surajit Das',
-
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    }, {
-                        id: 5,
-                        heading: 'SUBASH CHANDRA TRIPATHY',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    }, {
-                        id: 6,
-                        heading: 'Ranjit Kumar Behera',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    }, {
-                        id: 7,
-                        heading: 'Rabinarayan Mohanty',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    },
-                    {
-                        id: 8,
-                        heading: 'PRADIPTA KUMAR PATTANAYAK',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    }, {
-                        id: 9,
-                        heading: 'Paramita Aryadhara Panda',
-                        preference: [
-                            {
-                                id: 1,
-                                name: 'Mathematics-1',
-                            },
-                            {
-                                id: 2,
-                                name: 'Physics-1',
-                            },
-                            {
-                                id: 3,
-                                name: 'Chemistry-1',
-                            }
-                        ]
-                    }
-                ]
-
-        }, {
-            id: 2,
-            name: '2nd Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }, {
-            id: 3,
-            name: '3rd Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }, {
-            id: 4,
-            name: '4th Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }, {
-            id: 5,
-            name: '5th Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }, {
-            id: 6,
-            name: '6th Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }, {
-            id: 7,
-            name: '7th Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }, {
-            id: 8,
-            name: '8th Semeseter',
-            branchData: [
-                {
-                    id: 1,
-                    heading: 'Sagarika Swain',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-
-                },
-                {
-                    id: 2,
-                    heading: 'Siba Prasada Tripathy',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    heading: 'TARINI CHARANA MISHRA',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    heading: 'Surajit Das',
-
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 5,
-                    heading: 'SUBASH CHANDRA TRIPATHY',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 6,
-                    heading: 'Ranjit Kumar Behera',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 7,
-                    heading: 'Rabinarayan Mohanty',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                },
-                {
-                    id: 8,
-                    heading: 'PRADIPTA KUMAR PATTANAYAK',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }, {
-                    id: 9,
-                    heading: 'Paramita Aryadhara Panda',
-                    preference: [
-                        {
-                            id: 1,
-                            name: 'Mathematics-1',
-                        },
-                        {
-                            id: 2,
-                            name: 'Physics-1',
-                        },
-                        {
-                            id: 3,
-                            name: 'Chemistry-1',
-                        }
-                    ]
-                }
-            ]
-
-        }
-    ]
-
-    return (
-        <>
-            <div className="container">
-
-                <div className="row">
-                    <div className="col-md-3">
-                        <div class="list-group list-group-flush">
-                            {
-                                sidebarData.map((item) => {
-                                    return (
-                                        <button type="button" onClick={() => setData(item.branchData)} class="list-group-item list-group-item-action" aria-current="true">
-                                            {item.name}
-                                        </button>
-                                    )
-                                }
-                                )
-                            }
-
-
-                        </div>
-                    </div>
-                    {data ? (
-                        <div className="col-md-9">
-                            <div className="container">
-                                <div className="row">
-                                    {
-                                        data?.map((item) => {
-                                            return (
-                                                <div className="col-md-6">
-                                                    <div className="card sub-body" >
-                                                        <div className="card-body">
-                                                            <h5 className="card-titile-forsub">{item.heading}
-                                                                <p>
-                                                                    <span className='sub-heading-fac'>Computer Science and Engineering</span>
-                                                                </p>
-                                                                <select class="form-select form-selct-sub mt-3 mb-2" aria-label="Default select example">
-                                                                    <option selected className='option-sub'>Select Subject Preference</option>
-                                                                    {
-                                                                        item?.preference.map((item) => {
-
-                                                                            return (
-
-                                                                                <option value={item.id}>{item.name}</option>
-                                                                            )
-                                                                        })
-
-                                                                    }
-
-                                                                </select>
-
-                                                            </h5>
-
-
-                                                            <div className="text-center">
-                                                                {/* <button type="button" className='buttn buttn-trash'>
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </button> */}
-                                                                <button type="button" className='buttn buttn-edit'>
-                                                                    <i class="fas fa-edit"></i>
-                                                                </button>
-                                                                {/* <button type="button" className='buttn buttn-check'>
-                                                                    <i class="fas fa-check"></i>
-                                                                </button> */}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                    <div className="col-md-6">
-                                        <div className="card sub-body-addmore" >
-                                            <div className="card-body">
-                                                <div className="text-center">
-
-                                                    <button type="button" class="btn btn-primary-addmore btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add More</button>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    ) : "No Data"}
-
-                </div>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">ADD MORE SUBJECT</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                           
-
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label lable-modal">Subject Name</label>
-                                        <input type="text" class="form-control" id="exampleFormControlInput1" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlTextarea1" class="form-label lable-modal">Subject Description</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                    </div>
-                                    <button type="button" class="btn btn-primary-modal btn-lg" >Add</button>
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+  return (
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-3">
+            <div class="list-group list-group-flush">
+              {sidebardata.map((item) => {
+                return (
+                  <button
+                    type="button"
+                    onClick={() => setSem(item.id)}
+                    class="list-group-item list-group-item-action"
+                    aria-current="true"
+                  >
+                    {item.name}
+                  </button>
+                );
+              })}
             </div>
-        </>
-    )
+          </div>
+          {isSuccess && data ? (
+            <div className="col-md-9">
+              <div className="container">
+                <div className="row">
+                  {data.data.map((item) => {
+                    return (
+                      <div className="col-md-6">
+                        <div className="card sub-body">
+                          <div className="card-body">
+                            <h5 className="card-titile-forsub">
+                              {item.name}
+                              <p>
+                                <span className="sub-heading-fac">
+                                  {item.department}
+                                </span>
+                              </p>
+                              <p>
+                                <span className="sub-heading-fac">
+                                  Subject preference 1
+                                </span>
+                              </p>
+                              <select
+                                class="form-select form-selct-sub mt-3 mb-2"
+                                aria-label="Default select example"
+                                disabled={!disabled[item.id]}
+                                onChange={(e) =>
+                                  setEditData({
+                                    ...editdata,
+                                    subject_1: e.target.value,
+                                  })
+                                }
+                              >
+                                <option selected className="option-sub">
+                                  {!disabled[item.id]
+                                    ? item.subject_1
+                                    : "Select Subject Preference 1"}
+                                </option>
+                                {subjectdata?.data.map((item) => {
+                                  return (
+                                    <option value={item.name}>
+                                      {item.name}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                              <p>
+                                <span className="sub-heading-fac">
+                                  Subject preference 2
+                                </span>
+                              </p>
+                              <select
+                                class="form-select form-selct-sub mt-3 mb-2"
+                                aria-label="Default select example"
+                                disabled={!disabled[item.id]}
+                                onChange={(e) =>
+                                  setEditData({
+                                    ...editdata,
+                                    subject_2: e.target.value,
+                                  })
+                                }
+                              >
+                                <option selected className="option-sub">
+                                  {!disabled[item.id]
+                                    ? item.subject_2
+                                    : "Select Subject Preference 2"}
+                                </option>
+                                {subjectdata?.data.map((item) => {
+                                  return (
+                                    <option value={item.name}>
+                                      {item.name}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                              <p>
+                                <span className="sub-heading-fac">
+                                  Subject preference 3
+                                </span>
+                              </p>
+                              <select
+                                class="form-select form-selct-sub mt-3 mb-2"
+                                aria-label="Default select example"
+                                disabled={!disabled[item.id]}
+                                onChange={(e) =>
+                                  setEditData({
+                                    ...editdata,
+                                    subject_3: e.target.value,
+                                  })
+                                }
+                              >
+                                <option selected className="option-sub">
+                                  {!disabled[item.id]
+                                    ? item.subject_3
+                                    : "Select Subject Preference 3"}
+                                </option>
+                                {subjectdata?.data.map((item) => {
+                                  return (
+                                    <option value={item.name}>
+                                      {item.name}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </h5>
+                            <div className="text-center">
+                              <button
+                                type="button"
+                                className="buttn buttn-trash"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                onClick={() => {
+                                  setids(item.id);
+                                  setShowModal(true);
+                                }}
+                              >
+                                <i class="fas fa-trash-alt"></i>
+                              </button>
+                              <button
+                                type="button"
+                                className="buttn buttn-edit"
+                                onClick={() => {
+                                  disabled[item.id] = !disabled[item.id];
+                                  setShowModal(!showmodal);
+
+                                  setDisabled({ ...disabled });
+                                }}
+                              >
+                                <i class="fas fa-edit"></i>
+                              </button>
+                              {disabled[item.id] ? (
+                                <button
+                                  type="button"
+                                  className="buttn buttn-check"
+                                  onClick={() => {
+                                    handleEditFaculty(item.id);
+                                  }}
+                                >
+                                  <i class="fas fa-check"></i>
+                                </button>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div className="col-md-6">
+                    <div className="card sub-body-addmore">
+                      <div className="card-body">
+                        <div className="text-center">
+                          <button
+                            type="button"
+                            class="btn btn-primary-addmore btn-lg"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onClick={() => {
+                              setFacultyData({
+                                semester: sem,
+                                name: "",
+                                department: "CSE",
+                                subject_1: "",
+                                subject_2: "",
+                                subject_3: "",
+                              });
+                              setShowModal(true);
+                            }}
+                          >
+                            Add More
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            "No Data"
+          )}
+        </div>
+        <div
+          class="modal fade"
+          id="deleteModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Confirm Delete Subject
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div class="modal-body">
+                <button
+                  data-bs-dismiss="modal"
+                  type="button"
+                  class="btn btn-primary-modal btn-lg"
+                  onClick={() => handleDeleteFaculty(ids)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="exampleModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  ADD MORE FACULTY
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label
+                      for="exampleFormControlInput1"
+                      class="form-label lable-modal"
+                    >
+                      Faculty Name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleFormControlInput1"
+                      value={faculty_data.name}
+                      onChange={(e) =>
+                        setFacultyData({
+                          ...faculty_data,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label
+                      for="exampleFormControlInput1"
+                      class="form-label lable-modal"
+                    >
+                      Faculty Department
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleFormControlInput1"
+                      defaultValue={"COMPUTER SCIENCE AND ENGINEERING"}
+                      disabled
+                    />
+                  </div>
+                  <p>
+                    <span className="sub-heading-fac">
+                      Subject preference 1
+                    </span>
+                  </p>
+                  <select
+                    class="form-select form-selct-sub mt-3 mb-2"
+                    aria-label="Default select example"
+                    onChange={(e) =>
+                      setFacultyData({
+                        ...faculty_data,
+                        subject_1: e.target.value,
+                      })
+                    }
+                    value={faculty_data.subject_1}
+                  >
+                    <option selected className="option-sub">
+                      Select Preference 1
+                    </option>
+                    {subjectdata?.data.map((item) => {
+                      return <option value={item.name}>{item.name}</option>;
+                    })}
+                  </select>
+                  <p>
+                    <span className="sub-heading-fac">
+                      Subject preference 2
+                    </span>
+                  </p>
+                  <select
+                    class="form-select form-selct-sub mt-3 mb-2"
+                    aria-label="Default select example"
+                    onChange={(e) =>
+                      setFacultyData({
+                        ...faculty_data,
+                        subject_2: e.target.value,
+                      })
+                    }
+                    value={faculty_data.subject_2}
+                  >
+                    <option selected className="option-sub">
+                      Select Preference 2
+                    </option>
+                    {subjectdata?.data.map((item) => {
+                      return <option value={item.name}>{item.name}</option>;
+                    })}
+                  </select>
+                  <p>
+                    <span className="sub-heading-fac">
+                      Subject preference 3
+                    </span>
+                  </p>
+                  <select
+                    class="form-select form-selct-sub mt-3 mb-2"
+                    aria-label="Default select example"
+                    onChange={(e) =>
+                      setFacultyData({
+                        ...faculty_data,
+                        subject_3: e.target.value,
+                      })
+                    }
+                    value={faculty_data.subject_3}
+                  >
+                    <option selected className="option-sub">
+                      Select Preference 3
+                    </option>
+                    {subjectdata?.data.map((item) => {
+                      return <option value={item.name}>{item.name}</option>;
+                    })}
+                  </select>
+
+                  <button
+                    data-bs-dismiss="modal"
+                    type="button"
+                    class="btn btn-primary-modal btn-lg"
+                    onClick={handleAddSubmit}
+                  >
+                    Add
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
-export default Allocation
+export default Allocation;

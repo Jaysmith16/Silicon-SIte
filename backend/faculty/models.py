@@ -21,13 +21,15 @@ class Subject(AbstractBaseModel):
         db_table = 'Subject_data'
 
     def __str__(self) -> str:
-        return str(self.id) + " - " +  str(self.name) 
+        return str(self.id) + " - " +  str(self.name) +   " - " +  str(self.semester.number)  
 
 
 class Faculty(AbstractBaseModel):
     semester = models.ForeignKey(Semester, related_name='semester_teaching', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
-    subject_assigned = models.CharField(max_length=255, null=True, blank=True)
+    subject_1 = models.CharField(max_length=255, null=True, blank=True)
+    subject_2 = models.CharField(max_length=255, null=True, blank=True)
+    subject_3 = models.CharField(max_length=255, null=True, blank=True)
     department = models.CharField(max_length=50, choices=FACULTY_DEPARTMENT_CHOICES, default= "CSE") 
 
     def __str__(self) -> str:
