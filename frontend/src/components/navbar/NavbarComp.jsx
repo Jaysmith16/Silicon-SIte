@@ -1,7 +1,58 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getToken, removeToken } from "../../services/LocalStorage";
+import { useGetLoggedUserQuery } from "../../services/userAuthapi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo, unSetUserInfo } from "../../features/userSlice";
+import { unSetUserToken } from "../../features/authSlice";
 function NavbarComp() {
+  const { access_token } = getToken();
+  const { data, isSuccess } = useGetLoggedUserQuery(access_token);
+  const dispatch = useDispatch();
+  const userdata = useSelector((state) => state.user_info);
+
+  useEffect(() => {
+    if (data && isSuccess) {
+      dispatch(
+        setUserInfo({
+          id: data.id,
+          email: data.email,
+          name: data.name,
+          contact_number: data.contact_number,
+          game_ids: data.game_ids,
+          role_type: data.role_type,
+        })
+      );
+    } else {
+      dispatch(
+        setUserInfo({
+          id: "",
+          name: "",
+          email: "",
+          contact_number: "",
+          game_ids: {},
+          role_type: "BASIC",
+        })
+      );
+    }
+  }, [isSuccess, data, dispatch]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    removeToken();
+    dispatch(
+      unSetUserInfo({
+        name: "",
+        email: "",
+        contact_number: "",
+        game_ids: {},
+        role_type: "BASIC",
+      })
+    );
+    dispatch(unSetUserToken({ access_token: null }));
+    navigate("/");
+  };
   return (
     <div>
       <nav className="navbar navbar-expand-lg  ">
@@ -44,15 +95,64 @@ function NavbarComp() {
                   Silicon Home Page
                 </Link>
               </li>
+              {userdata.name ? (
+                <li className="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDarkDropdownMenuLink"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {userdata.name}
+                  </a>
+                  <ul
+                    class="dropdown-menu dropdown-menu-light"
+                    aria-labelledby="navbarDarkDropdownMenuLink"
+                  >
+                    <li>
+                      <Link class="dropdown-item" to="/profile">
+                        Profile
+                      </Link>
+                    </li>
 
-              <li className="nav-item upper-nav">
-                <Link className="nav-link" to="/login">
-                  Login / SignUp
-                </Link>
-              </li>
-              {/* <li className="nav-item">
-                            <Link className="nav-link"  to="/signup">Signup Here</Link>
-                        </li> */}
+                    <li>
+                      <div class="dropdown-item" onClick={handleLogout}>
+                        LogOut
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              ) : (
+                // <li class=" font-medium group inline-block relative text-secondary hover:text-white cursor-pointer ">
+                //   <Link to="/">{userdata.name}</Link>
+                //   <ul class="absolute hidden text-secondary pt-1 group-hover:block">
+                //     <li class="">
+                //       <Link
+                //         className=" text-left hover:text-white py-2 block whitespace-no-wrap"
+                //         to="/profile"
+                //       >
+                //         Profile
+                //       </Link>
+                //     </li>
+
+                //     <li class="">
+                //   <div
+                //     class=" hover:text-white py-2  block whitespace-no-wrap"
+                //     onClick={handleLogout}
+                //   >
+                //     LogOut
+                //   </div>
+                //     </li>
+                //   </ul>
+                // </li>
+                <li className="nav-item upper-nav">
+                  <Link className="nav-link" to="/login">
+                    Login / SignUp
+                  </Link>
+                </li>
+              )}
             </ul>
 
             <form className="d-flex searchbar">
