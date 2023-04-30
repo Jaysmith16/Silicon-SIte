@@ -22,6 +22,14 @@ class SubjectView(APIView):
         subjects = Subject.objects.filter(semester__number = sem)
         subject_data = SubjectSerializers(subjects, many=True).data
         return {"error":False, "msg":"Subject data", "data":subject_data}
+    def get_by_id(self, id):
+        print(id)
+        try:
+            subject = get_object_or_404(Subject, id = id)
+            subject_data = SubjectSerializers(subject).data
+            return {"error":False, "msg":"Subject data", "data":subject_data}
+        except Http404:
+            return {"error":True, "msg":f"Subject with the id {id} not found"}
     
     def get_all_subjects(self):
         subjects = Subject.objects.all()   
@@ -35,6 +43,13 @@ class SubjectView(APIView):
             if "sem" in query_params:
                 sem = query_params.get("sem", None)
                 subject_data = self.get_by_sem(sem)
+                if subject_data["error"] == True:
+                    return Response(subject_data, status=status.HTTP_404_NOT_FOUND)
+                
+                return Response(subject_data,status=status.HTTP_200_OK)
+            elif "id" in query_params:
+                id = query_params.get("id", None)
+                subject_data = self.get_by_id(id)
                 if subject_data["error"] == True:
                     return Response(subject_data, status=status.HTTP_404_NOT_FOUND)
                 
@@ -58,6 +73,7 @@ class SubjectView(APIView):
         sem = get_object_or_404(Semester, number = subject_data["semester"])
         subject_data["semester"] = sem.id
         subject_data["added_by"] = user.id
+        print(subject_data)
         serializer = SubjectSerializers(data=subject_data)
         if not serializer.is_valid():
             msg = GET_FIELD_ERRORS_FORMAT(serializer.errors)
@@ -84,6 +100,8 @@ class SubjectView(APIView):
     def update_subject(self, id,subject_data):
         try:
             subject_obj = get_object_or_404(Subject, id=id)
+            sem = get_object_or_404(Semester, number = subject_data["semester"])
+            subject_data["semester"] = sem
             for key, value in subject_data.items():
                 setattr(subject_obj, key, value)
             subject_obj.save()

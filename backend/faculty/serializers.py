@@ -10,6 +10,8 @@ class FacultySerializers(serializers.ModelSerializer):
         
 
 class SubjectSerializers(serializers.ModelSerializer):
+    # semester = serializers.CharField(source='semester.number')
+
     class Meta:
         model = Subject
         fields = '__all__'
