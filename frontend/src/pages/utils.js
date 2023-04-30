@@ -1,35 +1,35 @@
 export const sidebardata = [
   {
     id: 1,
-    name: "1st Semeseter",
+    name: "1st Semester",
   },
   {
     id: 2,
-    name: "2nd Semeseter",
+    name: "2nd Semester",
   },
   {
     id: 3,
-    name: "3rd Semeseter",
+    name: "3rd Semester",
   },
   {
     id: 4,
-    name: "4th Semeseter",
+    name: "4th Semester",
   },
   {
     id: 5,
-    name: "5th Semeseter",
+    name: "5th Semester",
   },
   {
     id: 6,
-    name: "6th Semeseter",
+    name: "6th Semester",
   },
   {
     id: 7,
-    name: "7th Semeseter",
+    name: "7th Semester",
   },
   {
     id: 8,
-    name: "8th Semeseter",
+    name: "8th Semester",
   },
 ];
 
