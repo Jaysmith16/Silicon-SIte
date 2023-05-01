@@ -110,7 +110,23 @@ class SubjectView(APIView):
             return {"error":False, "msg":"Subject Details  updated succesfully", "data":serializer}
         except Http404:
             return {"error":True,"msg":f"Subject with id {id} not found"}
+
+    def update_faculty_allocation(self,request_data ):
+        for field in ["id","faculty_allocated"]:
+            if field not in request_data:
+                return {"error":True, "msg":f"{field} not present in request data","data":None}
+
         
+        try:
+            subject = get_object_or_404(Subject, id = request_data["id"])
+            subject.faculty_allocated = request_data["faculty_allocated"]
+            subject.save()
+            serializer = SubjectSerializers(subject).data
+            
+            return {"error":False, "msg":"Faculty allocated succesfully", "data":serializer}
+        except Http404:
+            return {"error":True, "msg":f"Subject with id {request_data['id']} not found","data":None}
+            
 
     def put(self, request):
         query_params = request.query_params
@@ -119,6 +135,12 @@ class SubjectView(APIView):
             if 'id' in query_params:
                 number = int(query_params.get('id', None) )# /subject/?id=5
                 ret = self.update_subject(number, request.data)
+                if ret['error'] == True:
+                    return Response(ret, status=status.HTTP_404_NOT_FOUND)
+                return Response(ret, status=status.HTTP_200_OK)
+            
+            elif "allocation" in query_params:
+                ret = self.update_faculty_allocation(request.data)
                 if ret['error'] == True:
                     return Response(ret, status=status.HTTP_404_NOT_FOUND)
                 return Response(ret, status=status.HTTP_200_OK)

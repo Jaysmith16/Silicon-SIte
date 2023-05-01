@@ -16,6 +16,7 @@ class Subject(AbstractBaseModel):
     added_by = models.ForeignKey(User, related_name='subject_adding_user', on_delete=models.CASCADE, null=True, blank=True )
     name = models.CharField(max_length=255)
     description = models.TextField( blank=True, null=True)
+    faculty_allocated = models.CharField(max_length=255,blank=True, null=True)
     
     class Meta:
         db_table = 'Subject_data'
@@ -33,6 +34,6 @@ class Faculty(AbstractBaseModel):
     department = models.CharField(max_length=50, choices=FACULTY_DEPARTMENT_CHOICES, default= "CSE") 
 
     def __str__(self) -> str:
-        return str(self.id) + " - " +  str(self.name) + " - " +  str(self.department)    
+        return str(self.id) + " - " +  str(self.name) + " - " +  str(self.department) + " - " + str(self.semester.number)
 
 

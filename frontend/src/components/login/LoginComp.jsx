@@ -27,7 +27,7 @@ function LoginComp() {
       dispatch(setUserToken({ access_token: access_token }));
       setTimeout(() => {
         navigate("/", { replace: true });
-      }, 2000);
+      }, 200);
     }
   };
 

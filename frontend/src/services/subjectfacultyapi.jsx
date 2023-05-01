@@ -112,6 +112,30 @@ export const subjectfacultyApi = createApi({
         };
       },
     }),
+    getFacultyForSubjectAllocation: builder.mutation({
+      query: ({ subject_data, access_token }) => {
+        return {
+          url: "faculty/allocation/?get",
+          method: "POST",
+          body: subject_data,
+          headers: {
+            authorization: `Bearer ${access_token}`,
+          },
+        };
+      },
+    }),
+    updateFacultyAllocation: builder.mutation({
+      query: ({ subject_data, access_token }) => {
+        return {
+          url: `subject/?allocation`,
+          method: "PUT",
+          body: subject_data,
+          headers: {
+            authorization: `Bearer ${access_token}`,
+          },
+        };
+      },
+    }),
   }),
 });
 
@@ -125,4 +149,6 @@ export const {
   useUpdateSubjectDataMutation,
   useDeleteSubjectDataMutation,
   useLazyGetSingleSubjectByIdQuery,
+  useGetFacultyForSubjectAllocationMutation,
+  useUpdateFacultyAllocationMutation,
 } = subjectfacultyApi;

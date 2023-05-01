@@ -130,3 +130,39 @@ class FacultyView(APIView):
                 return Response({"error": True, "msg": "invalid query params in url", "data": None}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": True, "msg": "faculty id expected in query params in url", "data": None}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FacultyAllocationView(APIView):
+    
+    def get_facutly_by_sem(self, request_data):
+        for field in ["semester","sub_name"]:
+            if field not in request_data:
+                return {"error":True, "msg":f"{field} not present in request data","data":None}
+            
+        sem  = request_data["semester"]
+        subject_name = request_data["sub_name"]
+
+        faculties_1 = Faculty.objects.filter(Q(Q(subject_1 = subject_name) & Q(semester__number = sem)))
+        faculties_2 = Faculty.objects.filter(Q(Q(subject_2 = subject_name) & Q(semester__number = sem)))
+        faculties_3 = Faculty.objects.filter(Q(Q(subject_3 = subject_name) & Q(semester__number = sem)))
+        faculty1_data = FacultySerializers(faculties_1, many= True).data
+        faculty2_data = FacultySerializers(faculties_2, many= True).data
+        faculty3_data = FacultySerializers(faculties_3, many= True).data
+        
+        return {"error":False, "msg":f"Faculties having subject {subject_name} as preference in order", "data":[*faculty1_data, *faculty2_data, *faculty3_data]}
+        
+    
+    def post(self, request):
+        query_params = request.query_params
+        if query_params:
+            # if number exists in query params, return single order data by that number
+            if "get" in query_params:
+                faculty_data = self.get_facutly_by_sem(request.data)
+                if faculty_data["error"] == True:
+                    return Response(faculty_data, status=status.HTTP_404_NOT_FOUND)
+                
+                return Response(faculty_data,status=status.HTTP_200_OK)
+            else:
+                return Response({"error": True, "msg": "invalid query params in url", "data": None}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": True, "msg": "get expected in query params", "data": None}, status=status.HTTP_400_BAD_REQUEST)
