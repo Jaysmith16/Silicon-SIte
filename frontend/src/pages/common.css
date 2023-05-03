@@ -4,5 +4,11 @@
     color: #051b33;
     margin-bottom: 40px;
     text-transform: capitalize;
+    font-style: italic;
 
 }
+.dept-heading{
+    margin-top: -90px;
+    margin-bottom: 30px;
+}
+

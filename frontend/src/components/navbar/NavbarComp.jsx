@@ -79,21 +79,10 @@ function NavbarComp() {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto navbar-1st">
               <li className="nav-item upper-nav">
-                <Link
-                  className="nav-link"
-                  aria-current="page"
-                  href="https://silicon.ac.in/about-us/"
-                >
-                  About Us
-                </Link>
+              <Link className="nav-link" aria-current="page" to="/about">About Us</Link>
               </li>
               <li className="nav-item upper-nav">
-                <Link
-                  className="nav-link"
-                  href="https://silicon.ac.in/silicon-home/"
-                >
-                  Silicon Home Page
-                </Link>
+              <Link className="nav-link" to="/">Silicon Home Page</Link>
               </li>
               {userdata.name ? (
                 <li className="nav-item dropdown">
@@ -211,10 +200,8 @@ function NavbarComp() {
                 </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Report
-                </a>
-              </li>
+                                <Link className= "nav-link" to='/report'>Report</Link>
+                            </li>
             </ul>
           </div>
         </div>

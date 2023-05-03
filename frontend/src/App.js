@@ -10,6 +10,12 @@ import Signuppage from './pages/Signuppage';
 
 import { Routes, Route } from 'react-router-dom';
 import AllocationPage from './pages/AllocationPage';
+import ForgotPasswordPage from './components/forgotPwd/ForgotPasswordPage';
+import VerifyEmail from './components/verifyEmail/VerifyEmail';
+// import About from './components/AboutUs/aboutus';
+import AboutUsPage from './pages/AboutUs';
+import ReportPage from './pages/ReportPage';
+
 function App() {
   return (
     <div>
@@ -21,6 +27,10 @@ function App() {
           <Route path="/sem" element={<SemMPage />} />
           <Route path="/faculty" element={<FacultyMpage />} />
           <Route path="/allocation" element={<AllocationPage/>} />
+          <Route path="/forgot_pwd" element={<ForgotPasswordPage/>}/>
+          <Route path="/verify" element={<VerifyEmail/>}/>
+          <Route path='/about' element={<AboutUsPage/>}/>
+          <Route path='/report' element={<ReportPage/>}/>
        </Routes>
     </div>
   );

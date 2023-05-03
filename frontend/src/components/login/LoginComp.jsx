@@ -72,6 +72,7 @@ function LoginComp() {
             <button type="submit" className="btn btn-primary-submit">
               Login
             </button>
+            <a href="/forgot_pwd">forgot password?</a>
           </form>
         </div>
         <div className="card-footer-sec">
