@@ -145,6 +145,7 @@ export const {
   useUpdateFacultyDataMutation,
   useDeleteFacultyDataMutation,
   useGetSubjectBySemQuery,
+  useLazyGetSubjectBySemQuery,
   useAddSubjectDataMutation,
   useUpdateSubjectDataMutation,
   useDeleteSubjectDataMutation,
