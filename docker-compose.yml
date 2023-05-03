@@ -1,0 +1,44 @@
+# sdocker-compose.yml
+
+version: "3"
+services:
+
+  database:
+    image: postgres:12.7-alpine
+    volumes:
+        - ./backup_data/db:/var/lib/postgresql/data
+    environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+
+  backend:
+    build: ./backend
+    command: bash -c "python manage.py makemigrations &&
+                      python manage.py migrate && 
+                      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend_final:/app
+    # network_mode: "host"
+    # extra_hosts:
+    #   - "host.docker.internal:192.168.1.116"
+    depends_on:
+      - database
+    links:
+      - database:database
+  
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend_final:/app
+    depends_on:
+      - backend
+    ports:
+      - 80:80
+
+  nginx_backend_server:
+    build: ./nginx_backend_server
+    ports:
+        - 8000:8000
+    depends_on:
+        - backend
